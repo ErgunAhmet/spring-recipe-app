@@ -3,6 +3,7 @@ package be.recipe.recipe.bootstrap;
 import be.recipe.recipe.domain.*;
 import be.recipe.recipe.repositories.CategoryRepository;
 import be.recipe.recipe.repositories.RecipeRepository;
+import be.recipe.recipe.domain.UnitOfMeasure;
 import be.recipe.recipe.repositories.UnitOfMeasureRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
