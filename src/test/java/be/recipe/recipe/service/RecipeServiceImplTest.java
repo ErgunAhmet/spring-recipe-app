@@ -1,5 +1,7 @@
 package be.recipe.recipe.service;
 
+import be.recipe.recipe.converters.RecipeCommandToRecipe;
+import be.recipe.recipe.converters.RecipeToRecipeCommand;
 import be.recipe.recipe.domain.Recipe;
 import be.recipe.recipe.repositories.RecipeRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,19 +24,27 @@ class RecipeServiceImplTest {
 
     @Mock
     RecipeRepository recipeRepository;
+    @Mock
+    RecipeToRecipeCommand recipeToRecipeCommand;
+
+    @Mock
+    RecipeCommandToRecipe recipeCommandToRecipe;
 
     @BeforeEach
     void setUp() {
 
         MockitoAnnotations.initMocks(this);
-        recipeService = new RecipeServiceImpl(recipeRepository);
+        recipeService = new RecipeServiceImpl(recipeRepository, recipeCommandToRecipe, recipeToRecipeCommand);
     }
     @Test
     public void getRecipeByIdTest() {
         Recipe recipe = new Recipe();
         recipe.setId(1L);
+
         Optional<Recipe> recipeOptional = Optional.of(recipe);
+
         when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+
         Recipe recipeReturned = recipeService.findById(1L);
 
         verify(recipeRepository, times(1)).findById(anyLong());
@@ -49,8 +59,12 @@ class RecipeServiceImplTest {
         recipesDate.add(recipe);
 
         when(recipeRepository.findAll()).thenReturn(recipesDate);
+
         Set<Recipe> recipes = recipeService.getRecipes();
+
         assertEquals(recipes.size(), 1);
         verify(recipeRepository, times(1)).findAll();
+        verify(recipeRepository, never()).findById(anyLong());
+
     }
 }
