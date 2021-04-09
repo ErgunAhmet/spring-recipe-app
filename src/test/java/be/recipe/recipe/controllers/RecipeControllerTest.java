@@ -2,6 +2,7 @@ package be.recipe.recipe.controllers;
 
 import be.recipe.recipe.commands.RecipeCommand;
 import be.recipe.recipe.domain.Recipe;
+import be.recipe.recipe.exceptions.NotFoundException;
 import be.recipe.recipe.service.RecipeService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,6 +48,14 @@ class RecipeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipe/show"))
                 .andExpect(model().attributeExists("recipe"));
+    }
+    @Test
+    public void testGetRecipeNotFound() throws Exception {
+
+        when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+
+        mockMvc.perform(get("/recipe/1/show"))
+                .andExpect(status().isNotFound());
     }
 
     @Test
